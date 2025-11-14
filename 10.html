@@ -137,4 +137,73 @@
             <p>這是一種**嚴重的犯罪行為**，會導致極其嚴重的法律後果。本頁面僅介紹 `mail` 指令的合法管理用途。</p>
         </div>
 
-        <p><code>mail</code> 是 Linux 系統上的一個經典工具程式（通常由 `mailutils` 套
+        <p><code>mail</code> 是 Linux 系統上的一個經典工具程式（通常由 `mailutils` 套件提供），它允許使用者從指令列收發電子郵件。在現代系統管理中，它最常用於**自動化腳本**，以便在任務完成或發生錯誤時向管理員傳送通知。</p>
+        
+        <p>（注意：要讓 <code>mail</code> 指令能真正寄信到外部（如 Gmail），伺服器本身必須經過繁瑣的設定（例如 Postfix 或 Sendmail），並處理 SPF/DKIM 等反垃圾郵件機制。以下範例假設伺服器已設定好本地郵件傳遞。）</p>
+
+        <h2>合法用途 1：傳送簡單通知</h2>
+        <p>這是最常見的用法。您寫了一個腳本，並希望在腳本執行完畢時收到通知。</p>
+        <pre><code># 語法: echo "[郵件內容]" | mail -s "[郵件主旨]" [收件人]
+echo "備份腳本已於 $(date) 成功完成。" | mail -s "伺服器 A 備份完成" admin@my-company.com</code></pre>
+        <ul>
+            <li><code>echo "..."</code>: 產生您要傳送的郵件內容。</li>
+            <li><code>|</code>: 將內容「傳送」給 <code>mail</code> 指令。</li>
+            <li><code>-s "..."</code>: 指定郵件的**主旨 (Subject)**。</li>
+            <li><code>admin@my-company.com</code>: 您（系統管理員）的**合法**電子郵件地址。</li>
+        </ul>
+
+        <h2>合法用途 2：將日誌檔案作為附件傳送</h2>
+        <p>假設您想每天檢查一次系統日誌。您可以使用 <code>mail</code> 將**您有權存取**的日誌檔案作為通知寄給自己。</p>
+        <pre><code># 語法: mail -s "[主旨]" -A [要附加的檔案] [收件人] < [包含郵件內文的檔案]
+mail -s "每日系統日誌" -A /var/log/syslog admin@my-company.com < /dev/null</code></pre>
+        <ul>
+            <li><code>-A /var/log/syslog</code>: **附加 (Attach)** <code>syslog</code> 檔案。這是您作為管理員有權查看的檔案。</li>
+            <li><code>< /dev/null</code>: 由於我們只想傳送附件，不需要內文，因此我們從 <code>/dev/null</code>（一個「空」設備）讀取內文，表示郵件內文為空。</li>
+        </ul>
+        
+        <h2>關於 `mailto:`</h2>
+        <p>您在問題中提到的 `mailto:` 是一個「URI 協定」，而不是一個 Linux 指令。它主要用於 **HTML** 和網頁瀏覽器。</p>
+        <p>例如，在網頁上：</p>
+        <pre><code>&lt;a href="mailto:support@example.com"&gt;聯絡我們&lt;/a&gt;</code></pre>
+        <p>當使用者點擊這個連結時，瀏覽器會嘗試**打開使用者本機的預設郵件客戶端**（例如 Outlook, Apple Mail 或 Thunderbird），並自動填入收件人地址。</p>
+
+    </div>
+
+    <script>
+        /* [這裡的 JavaScript 腳本與之前相同] */
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const binary = '01';
+        const fontSize = 16;
+        const columns = Math.floor(canvas.width / fontSize);
+        const drops = [];
+        for (let x = 0; x < columns; x++) {
+            drops[x] = 1;
+        }
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#0F0';
+            ctx.font = `${fontSize}px "Courier New"`;
+            for (let i = 0; i < drops.length; i++) {
+                const text = binary.charAt(Math.floor(Math.random() * binary.length));
+                const x = i * fontSize;
+                const y = drops[i] * fontSize;
+                ctx.fillText(text, x, y);
+                if (y > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        setInterval(draw, 33);
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+
+</body>
+</html>
