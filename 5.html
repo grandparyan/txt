@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>指令詳解: base64 (資料編碼)</title>
+    <style>
+        /* [這裡的 CSS 樣式與之前頁面完全相同] */
+        body {
+            font-family: "Courier New", Courier, monospace;
+            line-height: 1.6;
+            background-color: #000;
+            color: #0F0;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #matrixCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 50px auto;
+            background-color: rgba(0, 0, 0, 0.75);
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #0056b3;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #00ff00;
+            text-decoration: none;
+            padding: 8px 15px;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .back-link:hover {
+            background-color: #00ff00;
+            color: #000;
+            text-shadow: none;
+        }
+        h1 {
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 10px;
+            color: #00ff00;
+            text-shadow: 0 0 5px #00ff00;
+        }
+        h2 {
+            color: #00cc00;
+            margin-top: 25px;
+            border-bottom: 1px dashed #0056b3;
+            padding-bottom: 5px;
+        }
+        h3 {
+            color: #00ff88;
+            margin-top: 20px;
+        }
+        pre {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid #00aa00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+            margin-bottom: 20px;
+        }
+        code {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 0.95em;
+        }
+        p {
+            margin-bottom: 15px;
+        }
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        ul li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 20px;
+        }
+        ul li::before {
+            content: "•";
+            color: #00ff00;
+            position: absolute;
+            left: 0;
+            font-size: 1.2em;
+            line-height: 1.6;
+        }
+        /* 【重要】黃色安全警告 */
+        .security-warning {
+            background-color: rgba(255, 255, 0, 0.1); /* 黃色警告 */
+            border: 1px solid #cccc00;
+            color: #ffff00; /* 亮黃色文字 */
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(255, 255, 0, 0.3);
+        }
+        .security-warning strong {
+            color: #ff0; /* 強調黃色 */
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="matrixCanvas"></canvas>
+
+    <div class="container">
+        <a href="matrix_links.html" class="back-link">← 返回筆記主頁</a>
+
+        <h1>指令詳解: `base64` (資料編碼)</h1>
+
+        <div class="security-warning">
+            <strong>【重要安全觀念】編碼 (Encoding) ≠ 加密 (Encryption)</strong>
+            <p><code>Base64</code> 是一種**編碼**格式，**它絕對不是加密**。它的目的是將二進位資料（如圖片）轉換成純文字（ASCII）字串，以便在 email、JSON 或 XML 等只支援文字的系統中安全傳輸。</p>
+            <p><code>base64 -d</code> (decode) 可以被**任何人**用來將 Base64 字串還原為原始資料。它**不提供任何安全性**。</p>
+            <p>在攻擊情境中，攻擊者尋找 Base64 字串，是因為他們希望系統開發者錯誤地用它來「隱藏」明文密碼。<strong>真正的安全來自於強大的加密，例如 HTTPS (SSL/TLS)。</strong></p>
+        </div>
+
+        <p><code>base64</code> 是一個標準的 Linux 指令，用於將資料編碼為 Base64 格式，或將 Base64 格式解碼回原始資料。</p>
+
+        <h2>合法與常規用途</h2>
+
+        <h3>1. 編碼 (Encoding)：將文字轉換為 Base64</h3>
+        <p>這在您需要將一些資料（例如 API 金鑰）貼入一個只接受純文字的 JSON 檔案中時很有用。</p>
+        <pre><code># 將 "hello world" 字串進行 base64 編碼
+echo "hello world" | base64</code></pre>
+        <p>輸出：</p>
+        <pre><code>aGVsbG8gd29ybGQK</code></pre>
+        <ul>
+            <li><code>echo "hello world"</code>: 產生字串。</li>
+            <li><code>|</code> (管道): 將 `echo` 的輸出傳送給下一個指令。</li>
+            <li><code>base64</code>: 讀取輸入並進行編碼。</li>
+        </ul>
+
+        <h3>2. 解碼 (Decoding)：將 Base64 還原為文字</h3>
+        <p>這就是您指令中的 <code>base64 -d</code>。它用於還原 Base64 編碼的資料。這在您從設定檔（例如 Kubernetes Secrets）讀取資料時很常見。</p>
+        <pre><code># 將 "aGVsbG8gd29ybGQK" 字串解碼
+echo "aGVsbG8gd29ybGQK" | base64 -d</code></pre>
+        <p>輸出：</p>
+        <pre><code>hello world</code></pre>
+        <ul>
+            <li><code>-d</code>: 代表 "decode" (解碼)。</li>
+        </ul>
+
+        <h3>3. 處理檔案</h3>
+        <p><code>base64</code> 也可以直接處理檔案。例如，將一張小圖示編碼成文字，以便嵌入到 CSS 樣式表中。</p>
+        <pre><code># 將一張圖片編碼成 .txt 檔案
+base64 my_icon.png > icon_base64.txt
+
+# 將 .txt 檔案解碼回原始圖片
+base64 -d icon_base64.txt > new_icon.png</code></pre>
+
+        <h2>安全總結 (防禦觀點)</h2>
+        <p>當您在進行安全稽核或網路分析 (使用 `tcpdump` 或 `Wireshark`) 時：</p>
+        <ul>
+            <li>如果您在網路流量中**看到了 Base64 字串**，尤其是跟在 `Authorization: Basic` 標頭後面。</li>
+            <li><strong>這是一個【紅色警報】！</strong></li>
+            <li>這意味著該應用程式正在透過**未加密的 HTTP** 傳送使用者憑證。攻擊者（如前幾步所示）可以輕易攔截並使用 `base64 -d` 立即解碼出明文帳號密碼。</li>
+            <li><strong>防禦措施</strong>: 必須立即停用該服務，並強制所有連線**改用 HTTPS**。</li>
+        </ul>
+
+    </div>
+
+    <script>
+        /* [這裡的 JavaScript 腳本與之前相同] */
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const binary = '01';
+        const fontSize = 16;
+        const columns = Math.floor(canvas.width / fontSize);
+        const drops = [];
+        for (let x = 0; x < columns; x++) {
+            drops[x] = 1;
+        }
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#0F0';
+            ctx.font = `${fontSize}px "Courier New"`;
+            for (let i = 0; i < drops.length; i++) {
+                const text = binary.charAt(Math.floor(Math.random() * binary.length));
+                const x = i * fontSize;
+                const y = drops[i] * fontSize;
+                ctx.fillText(text, x, y);
+                if (y > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        setInterval(draw, 33);
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+
+</body>
+</html>
