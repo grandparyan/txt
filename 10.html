@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>指令詳解: mail (傳送通知)</title>
+    <style>
+        /* [這裡的 CSS 樣式與之前頁面完全相同] */
+        body {
+            font-family: "Courier New", Courier, monospace;
+            line-height: 1.6;
+            background-color: #000;
+            color: #0F0;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #matrixCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 50px auto;
+            background-color: rgba(0, 0, 0, 0.75);
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #0056b3;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #00ff00;
+            text-decoration: none;
+            padding: 8px 15px;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .back-link:hover {
+            background-color: #00ff00;
+            color: #000;
+            text-shadow: none;
+        }
+        h1 {
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 10px;
+            color: #00ff00;
+            text-shadow: 0 0 5px #00ff00;
+        }
+        h2 {
+            color: #00cc00;
+            margin-top: 25px;
+            border-bottom: 1px dashed #0056b3;
+            padding-bottom: 5px;
+        }
+        h3 {
+            color: #00ff88;
+            margin-top: 20px;
+        }
+        pre {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid #00aa00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+            margin-bottom: 20px;
+        }
+        code {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 0.95em;
+        }
+        p {
+            margin-bottom: 15px;
+        }
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        ul li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 20px;
+        }
+        ul li::before {
+            content: "•";
+            color: #00ff00;
+            position: absolute;
+            left: 0;
+            font-size: 1.2em;
+            line-height: 1.6;
+        }
+        /* 【重要】極度危險警告 */
+        .extreme-danger-warning {
+            background-color: rgba(255, 0, 0, 0.2); /* 深紅色警告 */
+            border: 2px solid #ff0000; /* 鮮紅邊框 */
+            color: #ff8888; /* 亮紅色文字 */
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        }
+        .extreme-danger-warning strong {
+            color: #ff0000; /* 強調紅色 */
+            font-size: 1.2em;
+            display: block;
+            margin-bottom: 10px;
+            text-shadow: 0 0 5px #ff0000;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="matrixCanvas"></canvas>
+
+    <div class="container">
+        <a href="matrix_links.html" class="back-link">← 返回筆記主頁</a>
+
+        <h1>指令詳解: `mail` (系統通知)</h1>
+
+        <div class="extreme-danger-warning">
+            <strong>【極度危險警告】嚴禁資料外洩</strong>
+            <p><code>mail</code> 指令或 <code>mailto:</code> 協定本身是中性的，但它們可能被用於惡意目的。</p>
+            <p>在未經授權的情況下，將您透過 `cat` 或其他方式**竊取**來的資料（例如設定檔、密碼檔、私鑰）傳送到外部電子郵件地址，被稱為「資料外洩」(Data Exfiltration)。</p>
+            <p>這是一種**嚴重的犯罪行為**，會導致極其嚴重的法律後果。本頁面僅介紹 `mail` 指令的合法管理用途。</p>
+        </div>
+
+        <p><code>mail</code> 是 Linux 系統上的一個經典工具程式（通常由 `mailutils` 套
