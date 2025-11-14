@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>指令詳解: ssh (安全遠端登入)</title>
+    <style>
+        /* [這裡的 CSS 樣式與之前頁面完全相同] */
+        body {
+            font-family: "Courier New", Courier, monospace;
+            line-height: 1.6;
+            background-color: #000;
+            color: #0F0;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #matrixCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 50px auto;
+            background-color: rgba(0, 0, 0, 0.75);
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #0056b3;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #00ff00;
+            text-decoration: none;
+            padding: 8px 15px;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .back-link:hover {
+            background-color: #00ff00;
+            color: #000;
+            text-shadow: none;
+        }
+        h1 {
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 10px;
+            color: #00ff00;
+            text-shadow: 0 0 5px #00ff00;
+        }
+        h2 {
+            color: #00cc00;
+            margin-top: 25px;
+            border-bottom: 1px dashed #0056b3;
+            padding-bottom: 5px;
+        }
+        h3 {
+            color: #00ff88;
+            margin-top: 20px;
+        }
+        pre {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid #00aa00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+            margin-bottom: 20px;
+        }
+        code {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 0.95em;
+        }
+        p {
+            margin-bottom: 15px;
+        }
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        ul li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 20px;
+        }
+        ul li::before {
+            content: "•";
+            color: #00ff00;
+            position: absolute;
+            left: 0;
+            font-size: 1.2em;
+            line-height: 1.6;
+        }
+        /* 【重要】綠色安全提示 */
+        .security-good {
+            background-color: rgba(0, 255, 0, 0.1); /* 綠色提示 */
+            border: 1px solid #00cc00;
+            color: #44ff44; /* 亮綠色文字 */
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+        .security-good strong {
+            color: #00ff00; /* 強調綠色 */
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="matrixCanvas"></canvas>
+
+    <div class="container">
+        <a href="matrix_links.html" class="back-link">← 返回筆記主頁</a>
+
+        <h1>指令詳解: `ssh` (安全遠端登入)</h1>
+
+        <div class="security-good">
+            <strong>【核心安全工具】</strong>
+            <p><code>ssh</code> (Secure Shell) 是用於**防禦**網路竊聽的標準工具。它取代了古老且不安全的 <code>telnet</code> 和 <code>rlogin</code>。</p>
+            <p>使用 <code>ssh</code> 可以確保您的登入憑證和所有操作都在加密通道中傳輸，使 `tcpdump` 等監聽工具**無法**竊取您的明文密碼。</p>
+        </div>
+
+        <p><code>ssh</code> 是您作為系統管理員、開發人員或安全專業人員日常工具箱中最重要的工具之一。它允許您從您的本機終端機，安全地存取並操作一台遠端伺服器。</p>
+
+        <h2>基本用法：密碼登入</h2>
+        <p>這是最基礎的登入方式。您需要知道三件事：</p>
+        <ul>
+            <li>遠端主機的 IP 位址或網域名稱 (例如 `192.168.1.100` 或 `myserver.com`)</li>
+            <li>您在該主機上的**合法使用者名稱** (例如 `admin` 或 `devuser`)</li>
+            <li>該使用者的密碼</li>
+        </ul>
+        <pre><code>ssh devuser@192.168.1.100</code></pre>
+        <ul>
+            <li><code>devuser</code>: 您的使用者名稱。</li>
+            <li><code>192.168.1.100</code>: 伺服器的 IP 位址。</li>
+        </ul>
+        
+        <h3>【重要】首次連線指紋驗證</h3>
+        <p>當您第一次連線到某台主機時，您會看到這樣的提示：</p>
+        <pre><code>The authenticity of host '192.168.1.100 (192.168.1.100)' can't be established.
+ECDSA key fingerprint is SHA256:l2S...[一長串指紋]...E.
+Are you sure you want to continue connecting (yes/no/[fingerprint])?</code></pre>
+        <ul>
+            <li>**這是什麼？** 這是伺服器的「公鑰指紋」，就像是伺服器的身分證。</li>
+            <li>**您該怎麼做？** 在一個安全的網路環境中（例如您確定您連的是對的伺服器），輸入 `yes`。這會將伺服器的公鑰儲存到您本機的 `~/.ssh/known_hosts` 檔案中。</li>
+            <li>**安全機制**：如果下次您再連線同一台伺服器，但指紋**變了**，`ssh` 會**立即警告您並拒絕連線**。這可能表示伺服器重裝了，但也可能是您正在遭受「中間人攻擊」！</li>
+        </ul>
+        <p>輸入 `yes` 後，系統會提示您輸入 `devuser` 的密碼。輸入正確後，您就成功登入了。</p>
+
+        <h2>推薦用法：公鑰認證 (免密碼)</h2>
+        <p>依賴密碼並不安全（密碼可能被猜到、或在您使用不安全的 `http` 服務時被竊取）。最強大、最推薦的 `ssh` 登入方式是使用「金鑰對」。</p>
+        <p>這就像是為您的電腦製作一把專屬的「數位鑰匙」，並將「鎖」
