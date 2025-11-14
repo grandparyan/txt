@@ -3,68 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的技術筆記</title>
+    <title>我的帥氣技術筆記</title>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: "Courier New", Courier, monospace; /* 更具駭客感的字體 */
             line-height: 1.6;
             padding: 20px;
+            background-color: #000; /* 全黑背景 */
+            color: #0F0; /* 綠色文字 */
+            
+            /* 背景圖片設定 */
+            background-image: url('hacker_bg.png'); /* 替換為你的圖片路徑 */
+            background-size: cover; /* 覆蓋整個區域 */
+            background-attachment: fixed; /* 背景固定不動 */
+            background-position: center center; /* 圖片置中 */
+            background-repeat: no-repeat; /* 不重複 */
+        }
+        
+        .container {
             max-width: 800px;
             margin: 0 auto;
-            background-color: #f9f9f9;
-            color: #333;
+            background-color: rgba(0, 0, 0, 0.7); /* 半透明黑色背景，讓文字清晰可見 */
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #0056b3; /* 藍色邊框 */
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5); /* 綠色發光效果 */
         }
+
         h1 {
-            border-bottom: 2px solid #eee;
+            border-bottom: 2px solid #0056b3;
             padding-bottom: 10px;
+            color: #00ff00; /* 亮綠色標題 */
+            text-shadow: 0 0 5px #00ff00; /* 標題發光 */
         }
         h2 {
-            color: #0056b3; /* 藍色標題 */
+            color: #00cc00; /* 綠色副標題 */
+            margin-top: 25px;
         }
         pre {
-            background-color: #2d2d2d; /* 深色背景 */
-            color: #f1f1f1;           /* 淺色文字 */
+            background-color: rgba(0, 0, 0, 0.8); /* 深色半透明背景，文字更易讀 */
+            color: #00ff00;           /* 亮綠色文字 */
             padding: 15px;
             border-radius: 8px;
             overflow-x: auto;         /* 水平滾動 */
-            border: 1px solid #444;
+            border: 1px solid #00aa00; /* 綠色邊框 */
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3); /* 綠色發光 */
         }
         code {
             font-family: "Courier New", Courier, monospace;
             font-size: 0.95em;
         }
         .warning {
-            background-color: #fff3cd; /* 黃色警告框 */
-            border: 1px solid #ffeeba;
-            color: #856404;
+            background-color: rgba(255, 255, 0, 0.1); /* 淺黃色半透明警告框 */
+            border: 1px solid #cccc00;
+            color: #ffff00; /* 亮黃色文字 */
             padding: 15px;
             border-radius: 8px;
             margin-top: 20px;
+            box-shadow: 0 0 10px rgba(255, 255, 0, 0.3);
         }
     </style>
 </head>
 <body>
 
-    <h1>我的技術筆記</h1>
+    <div class="container">
+        <h1>我的帥氣技術筆記</h1>
 
-    <div class="warning">
-        <strong>安全提醒：</strong> 網路工具（如 Nmap、Tcpdump）應用於經授權的網路管理和安全測試。未經許可的掃描或攔截行為是違法且不道德的。
+        <div class="warning">
+            <strong>安全提醒：</strong> 網路工具（如 Nmap、Tcpdump）應用於經授權的網路管理和安全測試。未經許可的掃描或攔截行為是違法且不道德的。
+        </div>
+
+        <h2>1. 確認自己的 IP 位置</h2>
+        <pre><code>ip addr</code></pre>
+
+        <h2>2. 掃描子網域</h2>
+        <pre><code>nmap {您的網路範圍}</code></pre>
+
+        <h2>3. 安全登入主機</h2>
+        <pre><code>ssh {使用者名稱}@{主機IP}</code></pre>
+
+        <h2>4. 讀取檔案</h2>
+        <pre><code>cat {檔案名稱}</code></pre>
+
+        <h2>5. (其他筆記...)</h2>
+        <pre><code>{...請在此處填入您自己的指令...}</code></pre>
     </div>
-
-    <h2>1. 確認自己的 IP 位置</h2>
-    <pre><code>ip addr</code></pre>
-
-    <h2>2. 掃描子網域</h2>
-    <pre><code>nmap {您的網路範圍}</code></pre>
-
-    <h2>3. 安全登入主機</h2>
-    <pre><code>ssh {使用者名稱}@{主機IP}</code></pre>
-
-    <h2>4. 讀取檔案</h2>
-    <pre><code>cat {檔案名稱}</code></pre>
-
-    <h2>5. (其他筆記...)</h2>
-    <pre><code>{...請在此處填入您自己的指令...}</code></pre>
 
 </body>
 </html>
