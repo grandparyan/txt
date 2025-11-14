@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>指令詳解: ls (列出檔案)</title>
+    <style>
+        /* [這裡的 CSS 樣式與之前頁面完全相同] */
+        body {
+            font-family: "Courier New", Courier, monospace;
+            line-height: 1.6;
+            background-color: #000;
+            color: #0F0;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #matrixCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 50px auto;
+            background-color: rgba(0, 0, 0, 0.75);
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #0056b3;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #00ff00;
+            text-decoration: none;
+            padding: 8px 15px;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .back-link:hover {
+            background-color: #00ff00;
+            color: #000;
+            text-shadow: none;
+        }
+        h1 {
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 10px;
+            color: #00ff00;
+            text-shadow: 0 0 5px #00ff00;
+        }
+        h2 {
+            color: #00cc00;
+            margin-top: 25px;
+            border-bottom: 1px dashed #0056b3;
+            padding-bottom: 5px;
+        }
+        h3 {
+            color: #00ff88;
+            margin-top: 20px;
+        }
+        pre {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid #00aa00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+            margin-bottom: 20px;
+        }
+        code {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 0.95em;
+        }
+        p {
+            margin-bottom: 15px;
+        }
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        ul li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 20px;
+        }
+        ul li::before {
+            content: "•";
+            color: #00ff00;
+            position: absolute;
+            left: 0;
+            font-size: 1.2em;
+            line-height: 1.6;
+        }
+        /* 檔案類型顏色標註 */
+        .directory { color: #00aaff; } /* 藍色 - 資料夾 */
+        .executable { color: #00ff00; } /* 綠色 - 可執行檔 */
+        .file { color: #f1f1f1; } /* 白色 - 一般檔案 */
+        .permissions { color: #ffff00; } /* 黃色 - 權限 */
+        .user-group { color: #ff00ff; } /* 紫色 - 使用者/群組 */
+        .size-time { color: #00ffff; } /* 青色 - 大小/時間 */
+    </style>
+</head>
+<body>
+
+    <canvas id="matrixCanvas"></canvas>
+
+    <div class="container">
+        <a href="matrix_links.html" class="back-link">← 返回筆記主頁</a>
+
+        <h1>指令詳解: `ls` (列出檔案)</h1>
+
+        <p><code>ls</code> (List) 是您在 Linux 終端機中的「眼睛」。當您透過 `ssh` 登入一台伺服器並進入一個目錄後，<code>ls</code> 是您用來查看周圍環境的第一個指令。</p>
+
+        <h2>基本用法</h2>
+        <p>在終端機中直接輸入 <code>ls</code>：</p>
+        <pre><code>ls</code></pre>
+        <p>輸出可能會是這樣，不同的顏色代表不同的檔案類型（顏色可能因系統設定而異）：</p>
+        <pre><code><span class="directory">Documents/</span>    <span class="file">README.md</span>    <span class="executable">script.sh*</span>    <span class="directory">Music/</span></code></pre>
+        <ul>
+            <li><span class="directory">Documents/</span>: 這是一個資料夾 (目錄)。</li>
+            <li><span class="file">README.md</span>: 這是一個一般檔案。</li>
+            <li><span class="executable">script.sh*</span>: 這是一個可執行檔（例如一個腳本）。</li>
+        </ul>
+
+        <h2>常用且強大的選項 (Flags)</h2>
+        <p><code>ls</code> 的真正威力來自於它的選項。選項通常以 <code>-</code> 開頭，並且可以組合使用。</p>
+
+        <h3>1. `ls -l` (長格式 Long format)</h3>
+        <p>這是最有用的選項之一，它提供了詳細的「長格式」列表。</p>
+        <pre><code>ls -l</code></pre>
+        <p>輸出：</p>
+        <pre><code>total 12
+drwxr-xr-x 2 devuser devgroup 4096 Nov 15 02:30 <span class="directory">Documents/</span>
+-rw-r--r-- 1 devuser devgroup  512 Nov 10 11:20 <span class="file">README.md</span>
+-rwxr-xr-x 1 devuser devgroup 1024 Nov 15 02:40 <span class="executable">script.sh*</span></code></pre>
+        <p>讓我們來解讀第一行之後的內容：</p>
+        <ul>
+            <li><code>drwxr-xr-x</code>: **權限**。
+                <ul>
+                    <li>第一個字元 `d` 表示這是一個**目錄 (directory)**。`-` 表示它是一個檔案。</li>
+                    <li>後面九個字元 `rwxr-xr-x` 分三組，分別代表**擁有者**、**群組**、**其他人**的**讀(r)**、**寫(w)**、**執行(x)**權限。</li>
+                </ul>
+            </li>
+            <li><code>2</code>: 連結數。</li>
+            <li><code>devuser</code>: 檔案的**擁有者**。</li>
+            <li><code>devgroup</code>: 檔案所屬的**群組**。</li>
+            <li><code>4096</code>: 檔案**大小** (Bytes)。</li>
+            <li><code>Nov 15 02:30</code>: 最後**修改時間**。</li>
+            <li><code>Documents/</code>: **檔案/資料夾名稱**。</li>
+        </ul>
+
+        <h3>2. `ls -a` (全部 All)</h3>
+        <p>預設情況下，<code>ls</code> 會隱藏以 <code>.</code> 開頭的檔案和目錄（這些通常是設定檔）。<code>-a</code> 會顯示**全部**檔案。</p>
+        <pre><code>ls -a</code></pre>
+        <p>輸出 (注意多出來的檔案)：</p>
+        <pre><code>.    ..    .bashrc    <span class="directory">Documents/</span>    <span class="file">README.md</span>    <span class="executable">script.sh*</span></code></pre>
+        <ul>
+            <li><code>.</code>: 代表「當前目錄」。</li>
+            <li><code>..</code>: 代表「上一層目錄」。</li>
+            <li><code>.bashrc</code>: 這就是一個隱藏的設定檔。</li>
+        </ul>
+
+        <h3>3. `ls -h` (易讀 Human-readable)</h3>
+        <p>當與 <code>-l</code> 組合使用時 (<code>ls -lh</code>)，<code>-h</code> 會將檔案大小（如 <code>4096</code>）轉換為人類更容易閱讀的格式（如 <code>4.0K</code>）。</p>
+        <pre><code>ls -lh</code></pre>
+        <p>輸出 (注意大小欄位)：</p>
+        <pre><code>-rwxr-xr-x 1 devuser devgroup <span class="size-time">1.0K</span> Nov 15 02:40 <span class="executable">script.sh*</span></code></pre>
+        
+        <h3>4. `ls -t` (時間 Time)</h3>
+        <p>按最後修改時間排序，**最新的在最前面**。這對於檢查哪些檔案最近被更改過非常有用。</p>
+
+        <h2>組合使用 (最強大的方式)</h2>
+        <p>您可以將所有好用的選項組合在一起：</p>
+        <pre><code>ls -lah</code></pre>
+        <ul>
+            <li><code>-l</code>: 長格式</li>
+            <li><code>-a</code>: 顯示全部 (包含隱藏檔)</li>
+            <li><code>-h</code>: 易讀的檔案大小</li>
+        </ul>
+        <p>另一個常見組合是 <code>ls -ltr</code> (<code>-l</code>: 長格式, <code>-t</code>: 時間排序, <code>-r</code>: 反轉順序)，這會顯示**最舊**的檔案在最上面，**最新**的檔案在最下面，方便查看日誌。</p>
+
+        <p style="color: #ffff00; margin-top: 20px;">總結：<code>ls</code> 是您探索 Linux 檔案系統的「地圖」。精通 <code>ls -lah</code> 是您登入任何一台主機後的第一個重要技能。</p>
+    </div>
+
+    <script>
+        /* [這裡的 JavaScript 腳本與之前相同] */
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const binary = '01';
+        const fontSize = 16;
+        const columns = Math.floor(canvas.width / fontSize);
+        const drops = [];
+        for (let x = 0; x < columns; x++) {
+            drops[x] = 1;
+        }
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#0F0';
+            ctx.font = `${fontSize}px "Courier New"`;
+            for (let i = 0; i < drops.length; i++) {
+                const text = binary.charAt(Math.floor(Math.random() * binary.length));
+                const x = i * fontSize;
+                const y = drops[i] * fontSize;
+                ctx.fillText(text, x, y);
+                if (y > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        setInterval(draw, 33);
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+
+</body>
+</html>
