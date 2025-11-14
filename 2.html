@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>指令詳解: nmap</title>
+    <style>
+        /* [這裡的 CSS 樣式與 ip_addr_details.html 完全相同] */
+        body {
+            font-family: "Courier New", Courier, monospace;
+            line-height: 1.6;
+            background-color: #000;
+            color: #0F0;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #matrixCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 50px auto;
+            background-color: rgba(0, 0, 0, 0.75);
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #0056b3;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #00ff00;
+            text-decoration: none;
+            padding: 8px 15px;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .back-link:hover {
+            background-color: #00ff00;
+            color: #000;
+            text-shadow: none;
+        }
+        h1 {
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 10px;
+            color: #00ff00;
+            text-shadow: 0 0 5px #00ff00;
+        }
+        h2 {
+            color: #00cc00;
+            margin-top: 25px;
+            border-bottom: 1px dashed #0056b3;
+            padding-bottom: 5px;
+        }
+        h3 {
+            color: #00ff88;
+            margin-top: 20px;
+        }
+        pre {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid #00aa00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+            margin-bottom: 20px;
+        }
+        code {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 0.95em;
+        }
+        p {
+            margin-bottom: 15px;
+        }
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        ul li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 20px;
+        }
+        ul li::before {
+            content: "•";
+            color: #00ff00;
+            position: absolute;
+            left: 0;
+            font-size: 1.2em;
+            line-height: 1.6;
+        }
+        /* 【重要】警告框的樣式 */
+        .danger-warning {
+            background-color: rgba(255, 0, 0, 0.1); /* 紅色警告 */
+            border: 1px solid #cc0000;
+            color: #ff4444; /* 亮紅色文字 */
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+        }
+        .danger-warning strong {
+            color: #ff0000; /* 強調紅色 */
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="matrixCanvas"></canvas>
+
+    <div class="container">
+        <a href="matrix_links.html" class="back-link">← 返回筆記主頁</a>
+
+        <h1>指令詳解: `nmap`</h1>
+
+        <div class="danger-warning">
+            <strong>【極度重要】法律與道德警告</strong>
+            <p><code>Nmap</code> 是一個功能強大的網路掃描工具。它既是網路管理員的得力助手，也是攻擊者常用的偵察工具。</p>
+            <p><strong>您【絕對禁止】在未經明確授權的情況下對任何不屬於您的網路或主機使用 Nmap。</strong></p>
+            <p>未經授權的掃描在多數國家和地區均屬**違法行為**，可能導致嚴重的法律後果。本教學僅限於**教育目的**和在**您自己的網路或授權的測試環境**中使用。</p>
+        </div>
+
+        <p><code>Nmap</code> (Network Mapper) 是一個開源的網路探測和安全稽核工具。系統管理員使用它來執行網路清點、管理服務升級排程，以及監控主機或服務的運作狀態。</p>
+
+        <h2>合法與防禦性用途</h2>
+        <p>作為一個負責任的系統管理員或安全學習者，<code>nmap</code> 主要用於「防禦」目的：</p>
+        <ul>
+            <li><strong>網路資產盤點</strong>: 快速找出在您**自己**的網路上有哪些設備在線。</li>
+            <li><strong>防火牆規則驗證</strong>: 檢查您**自己**的伺服器或防火牆是否正確關閉了不應開放的埠。</li>
+            <li><strong>服務檢查</strong>: 確認您**自己**的伺服器上，預期要運行的服務 (如網頁伺服器、SSH) 是否正常啟動並在監聽。</li>
+        </ul>
+
+        <h2>常用防禦性指令</h2>
+
+        <h3>1. 主機發現 (Ping Scan)</h3>
+        <p>這是最安全、最不具侵擾性的掃描。它只會檢查在您指定的網路範圍內，有哪些主機是在線的 (回應 Ping)，而不會嘗試掃描它們的埠。</p>
+        <p>這對於清點您家中或公司內部網路 (您有權管理) 有多少設備非常有用。</p>
+        <pre><code>nmap -sn 192.168.1.0/24</code></pre>
+        <ul>
+            <li><code>-sn</code>: (Skip Port Scan) 告訴 Nmap 不要進行埠掃描，只做主機發現。</li>
+            <li><code>192.168.1.0/24</code>: 您要掃描的子網路範圍 (請替換為您**自己**的網路範圍，例如 `192.168.0.0/24`)。</li>
+        </ul>
+
+        <h3>2. 掃描單一主機的常用埠</h3>
+        <p>這用於檢查**您自己**的特定主機（例如您架設的網站伺服器或 `localhost`）開放了哪些常見的服務埠。</p>
+        <pre><code>nmap 192.168.1.100</code></pre>
+        <p>或者，掃描您自己的本機：</p>
+        <pre><code>nmap localhost</code></pre>
+        <ul>
+            <li><code>nmap</code> 預設會掃描目標主機上 1000 個最常見的 TCP 埠。</li>
+        </ul>
+
+        <h2>如何解讀輸出</h2>
+        <pre><code>Starting Nmap 7.91 ( https://nmap.org ) at 2025-11-15 02:30 CST
+Nmap scan report for myserver.local (192.168.1.100)
+Host is up (0.0010s latency).
+Not shown: 997 closed ports
+PORT    STATE SERVICE
+22/tcp  open  ssh
+80/tcp  open  http
+443/tcp open  https
+
+Nmap done: 1 IP address (1 host up) scanned in 0.45 seconds
+</code></pre>
+        <ul>
+            <li><strong>`PORT 22/tcp open ssh`</strong>:
+                <p>表示 SSH 服務 (安全遠端登入) 正在 22 埠運行。如果您不打算開放遠端登入，這就是一個**安全警示**，您應該去檢查防火牆規則。</p>
+            </li>
+            <li><strong>`PORT 80/tcp open http`</strong>:
+                <p>表示標準的網頁伺服器 (HTTP) 正在 80 埠運行。如果您正在架設網站，這是正常的。</p>
+            </li>
+            <li><strong>`PORT 443/tcp open https`</strong>:
+                <p>表示安全的網頁伺服器 (HTTPS) 正在 443 埠運行。</p>
+            </li>
+            <li><strong>`Not shown: 997 closed ports`</strong>:
+                <p>非常好！這表示其他 997 個常見埠都是關閉的，有效降低了受攻擊面。</p>
+            </li>
+        </ul>
+        
+        <p>總結來說，<code>nmap</code> 是一個強大的稽核工具。請務必在**授權範圍內**負責任地使用它，以強化您自己的網路安全。</p>
+
+    </div>
+
+    <script>
+        /* [這裡的 JavaScript 腳本與 ip_addr_details.html 完全相同] */
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const binary = '01';
+        const fontSize = 16;
+        const columns = Math.floor(canvas.width / fontSize);
+        const drops = [];
+        for (let x = 0; x < columns; x++) {
+            drops[x] = 1;
+        }
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#0F0';
+            ctx.font = `${fontSize}px "Courier New"`;
+            for (let i = 0; i < drops.length; i++) {
+                const text = binary.charAt(Math.floor(Math.random() * binary.length));
+                const x = i * fontSize;
+                const y = drops[i] * fontSize;
+                ctx.fillText(text, x, y);
+                if (y > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        setInterval(draw, 33);
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            // 為了保持閱讀體驗，不自動重新加載
+        });
+    </script>
+
+</body>
+</html>
