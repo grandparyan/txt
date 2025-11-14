@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>指令詳解: logout (登出)</title>
+    <style>
+        /* [這裡的 CSS 樣式與之前頁面完全相同] */
+        body {
+            font-family: "Courier New", Courier, monospace;
+            line-height: 1.6;
+            background-color: #000;
+            color: #0F0;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #matrixCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 50px auto;
+            background-color: rgba(0, 0, 0, 0.75);
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #0056b3;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #00ff00;
+            text-decoration: none;
+            padding: 8px 15px;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .back-link:hover {
+            background-color: #00ff00;
+            color: #000;
+            text-shadow: none;
+        }
+        h1 {
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 10px;
+            color: #00ff00;
+            text-shadow: 0 0 5px #00ff00;
+        }
+        h2 {
+            color: #00cc00;
+            margin-top: 25px;
+            border-bottom: 1px dashed #0056b3;
+            padding-bottom: 5px;
+        }
+        h3 {
+            color: #00ff88;
+            margin-top: 20px;
+        }
+        pre {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid #00aa00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+            margin-bottom: 20px;
+        }
+        pre.output {
+            color: #f1f1f1; /* 輸出用白色 */
+            background-color: rgba(10, 10, 10, 0.8);
+            border: 1px dashed #444;
+        }
+        code {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 0.95em;
+        }
+        p {
+            margin-bottom: 15px;
+        }
+        /* 【重要】綠色安全提示 */
+        .security-good {
+            background-color: rgba(0, 255, 0, 0.1); /* 綠色提示 */
+            border: 1px solid #00cc00;
+            color: #44ff44; /* 亮綠色文字 */
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+        .security-good strong {
+            color: #00ff00; /* 強調綠色 */
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="matrixCanvas"></canvas>
+
+    <div class="container">
+        <a href="matrix_links.html" class="back-link">← 返回筆記主頁</a>
+
+        <h1>指令詳解: `logout` (安全登出)</h1>
+
+        <div class="security-good">
+            <strong>【安全最佳實踐】</strong>
+            <p>完成工作後，務必登出您的遠端連線 (`ssh` session)。這就像離開房間時鎖門一樣，可以防止任何未經授權的人在您離開時存取您的伺服器，並能釋放伺服器資源。</p>
+            <p>永遠不要保持一個閒置的 `ssh` 連線處於開啟狀態。</p>
+        </div>
+
+        <p><code>logout</code> 是一個內建的 shell 指令，用於結束您的登入 session。當您透過 `ssh` 連線到遠端伺服器時，執行此指令將安全地關閉連線，並將您帶回到您本機的終端機。</p>
+
+        <h2>1. 基本用法</h2>
+        <p>在您完成所有伺服器上的操作後，只需在提示符號下輸入：</p>
+        <pre><code>logout</code></pre>
+        <p>系統將關閉連線並顯示類似以下的訊息，接著您會看到您**本機**的提示符號：</p>
+        <pre class="output">Connection to 192.168.1.100 closed.
+[user@local-machine ~]$</pre>
+
+        <h2>2. 替代指令 (更常用)</h2>
+        <p>有兩個更常見且功能相同的方式可以達到登出的目的：</p>
+        
+        <h3>A. `exit` 指令</h3>
+        <p><code>exit</code> 是 <code>logout</code> 最常見的替代品，功能完全相同，並且在所有類型的 shell 中都適用。</p>
+        <pre><code>exit</code></pre>
+
+        <h3>B. `Ctrl+D` 快捷鍵</h3>
+        <p>在終端機的提示符號下（當您沒有輸入任何指令時），直接按下 <code>Ctrl+D</code> 組合鍵。</p>
+        <ul>
+            <li><code>Ctrl+D</code> 代表 "End-of-File" (檔案結尾)。</li>
+            <li>Shell 會將這個訊號解釋為「沒有更多指令了」，因此會自動執行登出。</li>
+            <li>這是許多專業人士最快、最常用的登出方式。</li>
+        </ul>
+        
+        <p style="color: #ffff00; margin-top: 20px;">總結：無論您使用 `logout`、`exit` 還是 `Ctrl+D`，養成隨手登出的習慣是保護伺服器安全的基本功。</p>
+
+    </div>
+
+    <script>
+        /* [這裡的 JavaScript 腳本與之前相同] */
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const binary = '01';
+        const fontSize = 16;
+        const columns = Math.floor(canvas.width / fontSize);
+        const drops = [];
+        for (let x = 0; x < columns; x++) {
+            drops[x] = 1;
+        }
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#0F0';
+            ctx.font = `${fontSize}px "Courier New"`;
+            for (let i = 0; i < drops.length; i++) {
+                const text = binary.charAt(Math.floor(Math.random() * binary.length));
+                const x = i * fontSize;
+                const y = drops[i] * fontSize;
+                ctx.fillText(text, x, y);
+                if (y > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        setInterval(draw, 33);
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+
+</body>
+</html>
