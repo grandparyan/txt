@@ -1,59 +1,74 @@
-<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>滲透測試者工具書</title>
+    <title>我的帥氣技術筆記 (可點擊版)</title>
     <style>
         /* 1. 全局和背景設定 */
         body {
             font-family: "Courier New", Courier, monospace;
             line-height: 1.6;
-            background-color: #000; /* 全黑背景 */
-            color: #0F0; /* 預設綠色文字 */
+            background-color: #000;
+            color: #0F0;
             margin: 0;
             padding: 0;
-            overflow: hidden; /* 隱藏滾動條 */
+            overflow: hidden;
         }
 
         /* 2. Canvas 畫布 (Matrix 雨) */
         #matrixCanvas {
-            position: fixed; /* 固定在整個視窗 */
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1; /* 放在最底層 */
+            z-index: 1;
         }
 
         /* 3. 內容容器 (您的筆記) */
         .container {
-            position: relative; /* 確保它在 canvas 之上 */
-            z-index: 2; /* 層級高於 canvas */
-            
+            position: relative;
+            z-index: 2;
             max-width: 800px;
-            margin: 50px auto; /* 距離頂部 50px，左右自動 */
-            background-color: rgba(0, 0, 0, 0.75); /* 半透明黑色背景 */
+            margin: 50px auto;
+            background-color: rgba(0, 0, 0, 0.75);
             padding: 30px;
             border-radius: 10px;
-            border: 1px solid #0056b3; /* 藍色邊框 */
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5); /* 綠色發光效果 */
-            
-            /* 讓內容可以滾動，如果筆記太長 */
-            max-height: 80vh; /* 最大高度為視窗的 80% */
-            overflow-y: auto; /* 內容超出時顯示垂直滾動條 */
+            border: 1px solid #0056b3;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        /* * 4. 【新增】連結樣式 
+         * 這會移除連結預設的顏色和底線，讓它看起來和普通文字一樣
+         */
+        .command-link {
+            display: block; /* 讓連結變成區塊元素，可以包住 h2 和 pre */
+            text-decoration: none; /* 移除底線 */
+            color: inherit; /* 繼承父層的顏色 (綠色) */
+            transition: background-color 0.3s ease; /* 新增滑鼠移過效果 */
+            border-radius: 8px; /* 圓角 */
+            padding: 5px; /* 一點內距 */
+            margin: 10px 0; /* 上下間距 */
         }
 
-        /* 4. 內容樣式 */
+        /* 【新增】滑鼠移到連結上時的樣式 */
+        .command-link:hover {
+            background-color: rgba(0, 255, 0, 0.1); /* 淡淡的綠色背景 */
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5); /* 增加發光 */
+        }
+        
+        /* 5. 內容樣式 */
         h1 {
             border-bottom: 2px solid #0056b3;
             padding-bottom: 10px;
-            color: #00ff00; /* 亮綠色標題 */
-            text-shadow: 0 0 5px #00ff00; /* 標題發光 */
+            color: #00ff00;
+            text-shadow: 0 0 5px #00ff00;
         }
         h2 {
-            color: #00cc00; /* 綠色副標題 */
-            margin-top: 25px;
+            color: #00cc00;
+            margin-top: 0; /* 因為連結會處理間距，所以這裡改為 0 */
         }
         pre {
             background-color: rgba(0, 0, 0, 0.8);
@@ -63,6 +78,7 @@
             overflow-x: auto;
             border: 1px solid #00aa00;
             box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+            margin-bottom: 0; /* 同上 */
         }
         code {
             font-family: "Courier New", Courier, monospace;
@@ -92,33 +108,53 @@
 
         <h2>1. 確認自己的 IP 位置</h2>
         <pre><code>ip addr</code></pre>
+        </a>
+        <a href="1.html" class="command-link">
 
         <h2>2. 找出 DMZ 內所有開啟的 Services (Port)</h2>
-        <pre><code>nmap {你的IP位置}</code></pre>
-
+        <pre><code>nmap {您的網路範圍}</code></pre>
+        </a>
+        <a href="2.html" class="command-link">
+            
         <h2>3. 嘗試連接內部電腦</h2>
         <pre><code>ssh {使用者名稱}@{主機IP}</code></pre>
-
+        </a>
+        <a href="3.html" class="command-link">
+            
         <h2>4. 攔截帶有帳號密碼的封包</h2>
         <pre><code>tcpdump</code></pre>
-
+        </a>
+        <a href="4.html" class="command-link">
+            
         <h2>5. 解碼封包</h2>
         <pre><code>base64 -d {    }</code></pre>
-
+        </a>
+        <a href="5.html" class="command-link">
+            
         <h2>6. 登入內部主機</h2>
         <pre><code>ssh {    }@{    }</code></pre>
-
+        </a>
+        <a href="6.html" class="command-link">
+            
         <h2>7. 利用linux指令操作內部主機</h2>
         <pre><code>ls</code></pre>
-
+        </a>
+        <a href="7.html" class="command-link">
+            
         <h2>8. 讀取重要資料</h2>
         <pre><code>cat {    }</code></pre>
-
+        </a>
+        <a href="8.html" class="command-link">     
+            
         <h2>9. 斷開內部電腦</h2>
         <pre><code>logout</code></pre>
-
+        </a>
+        <a href="9.html" class="command-link">
+            
         <h2>10. 送出資料</h2>
         <pre><code>mailto ~[1130730@fheh.isip.org](mailto:1130730@fheh.isip.org)~ {    }</code></pre>
+        </a>
+        <a href="10.html" class="command-link">
         
     </div>
 
