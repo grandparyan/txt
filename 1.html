@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>指令詳解: ip addr</title>
+    <style>
+        /* 1. 全局和背景設定 */
+        body {
+            font-family: "Courier New", Courier, monospace;
+            line-height: 1.6;
+            background-color: #000;
+            color: #0F0;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        /* 2. Canvas 畫布 (Matrix 雨) */
+        #matrixCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* 3. 內容容器 (您的筆記) */
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 900px; /* 稍微寬一點，方便內容展示 */
+            margin: 50px auto;
+            background-color: rgba(0, 0, 0, 0.75);
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #0056b3;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            max-height: 85vh; /* 稍微高一點 */
+            overflow-y: auto;
+        }
+        
+        /* 返回主頁連結 */
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #00ff00;
+            text-decoration: none;
+            padding: 8px 15px;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .back-link:hover {
+            background-color: #00ff00;
+            color: #000;
+            text-shadow: none;
+        }
+
+        h1 {
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 10px;
+            color: #00ff00;
+            text-shadow: 0 0 5px #00ff00;
+        }
+        h2 {
+            color: #00cc00;
+            margin-top: 25px;
+            border-bottom: 1px dashed #0056b3; /* 添加虛線分隔 */
+            padding-bottom: 5px;
+        }
+        h3 {
+            color: #00ff88; /* 稍淺的綠色 */
+            margin-top: 20px;
+        }
+        pre {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid #00aa00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+            margin-bottom: 20px;
+        }
+        code {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 0.95em;
+        }
+        p {
+            margin-bottom: 15px;
+        }
+        ul {
+            list-style: none; /* 移除預設列表點 */
+            padding-left: 0;
+        }
+        ul li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 20px;
+        }
+        ul li::before { /* 自定義列表點 */
+            content: "•"; /* 實心圓點 */
+            color: #00ff00;
+            position: absolute;
+            left: 0;
+            font-size: 1.2em;
+            line-height: 1.6;
+        }
+
+        .warning {
+            background-color: rgba(255, 255, 0, 0.1);
+            border: 1px solid #cccc00;
+            color: #ffff00;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(255, 255, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="matrixCanvas"></canvas>
+
+    <div class="container">
+        <a href="matrix_links.html" class="back-link">← 返回筆記主頁</a>
+
+        <h1>指令詳解: `ip addr`</h1>
+
+        <p><code>ip addr</code> (或 `ip a`) 是 Linux 系統中一個功能強大的指令，用於顯示和管理網路介面。它是舊版 `ifconfig` 指令的現代替代品，提供更詳細和彈性的網路資訊。</p>
+
+        <h2>基本用法</h2>
+        <p>要查看所有網路介面的詳細資訊，只需執行：</p>
+        <pre><code>ip addr</code></pre>
+
+        <p>或簡寫為：</p>
+        <pre><code>ip a</code></pre>
+
+        <h2>輸出範例解析</h2>
+        <p>執行 <code>ip addr</code> 後，您會看到類似以下結構的輸出（具體內容會因您的系統配置而異）：</p>
+        <pre><code>1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 00:0c:29:ab:cd:ef brd ff:ff:ff:ff:ff:ff
+    inet 192.168.1.100/24 brd 192.168.1.255 scope global dynamic eth0
+       valid_lft 86242sec preferred_lft 86242sec
+    inet6 fe80::a00:27ff:fe8e:e1e1/64 scope link 
+       valid_lft forever preferred_lft forever
+</code></pre>
+
+        <h3>主要資訊解釋：</h3>
+        <ul>
+            <li>**`lo` (Loopback 介面)**:
+                <p>一個虛擬的環回介面，用於本機內部通訊（例如，程式之間透過 `127.0.0.1` 互相通訊）。它沒有實體網路連接。</p>
+                <ul>
+                    <li>`inet 127.0.0.1/8`: IPv4 本機位址。</li>
+                    <li>`inet6 ::1/128`: IPv6 本機位址。</li>
+                </ul>
+            </li>
+            <li>**`eth0` (乙太網路介面)**:
+                <p>這是一個典型的實體乙太網路卡介面名稱（在較新的系統中可能是 `enp0s3` 或其他名稱），它連接到您的局域網 (LAN) 或網際網路。</p>
+                <ul>
+                    <li>`link/ether 00:0c:29:ab:cd:ef`: 顯示該網路卡的 MAC 位址 (Media Access Control Address)，是硬體的唯一識別碼。</li>
+                    <li>`inet 192.168.1.100/24`: 這是您的 IPv4 位址。
+                        <ul>
+                            <li>`192.168.1.100`: IP 位址。</li>
+                            <li>`/24`: 子網路遮罩 (subnet mask)，表示網路位址佔 24 位元。</li>
+                            <li>`brd 192.168.1.255`: 廣播位址。</li>
+                            <li>`scope global dynamic`: 表示這是一個可以從外部網路存取、透過 DHCP 動態分配的位址。</li>
+                        </ul>
+                    </li>
+                    <li>`inet6 fe80::.../64`: IPv6 位址。</li>
+                </ul>
+            </li>
+            <li>**狀態標誌 (如 `<UP,LOWER_UP>`)**:
+                <p>表示介面的狀態。`UP` 表示介面已啟用，`LOWER_UP` 表示實體層連接已建立。</p>
+            </li>
+            <li>**`mtu` (Maximum Transmission Unit)**:
+                <p>最大傳輸單元，表示單個封包最大可以傳輸的位元組數。</p>
+            </li>
+        </ul>
+
+        <h2>常用選項</h2>
+        <ul>
+            <li>`ip a show eth0`: 只顯示 `eth0` 介面的資訊。</li>
+            <li>`ip a show up`: 只顯示啟用的 (UP) 介面。</li>
+            <li>`ip -s a`: 顯示更詳細的統計資訊 (statistics)。</li>
+        </ul>
+
+        <p>通過理解 <code>ip addr</code> 的輸出，您可以快速掌握本機的網路配置情況，這對於網路故障排除和安全檢查至關重要。</p>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const binary = '01';
+        const fontSize = 16;
+        const columns = Math.floor(canvas.width / fontSize);
+        const drops = [];
+        for (let x = 0; x < columns; x++) {
+            drops[x] = 1;
+        }
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#0F0';
+            ctx.font = `${fontSize}px "Courier New"`;
+            for (let i = 0; i < drops.length; i++) {
+                const text = binary.charAt(Math.floor(Math.random() * binary.length));
+                const x = i * fontSize;
+                const y = drops[i] * fontSize;
+                ctx.fillText(text, x, y);
+                if (y * fontSize > canvas.height && Math.random() > 0.975) { /* 修正這裡的條件 */
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        setInterval(draw, 33);
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            // 由於重新加載會打斷用戶的閱讀，這裡不建議直接 reload()
+            // 更好的方式是重新計算 drops 陣列並調整動畫
+            // 為了簡化，這裡暫時不做處理，但實際應用中可考慮優化
+        });
+    </script>
+
+</body>
+</html>
