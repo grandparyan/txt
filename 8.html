@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>指令詳解: cat (查看/串接檔案)</title>
+    <style>
+        /* [這裡的 CSS 樣式與之前頁面完全相同] */
+        body {
+            font-family: "Courier New", Courier, monospace;
+            line-height: 1.6;
+            background-color: #000;
+            color: #0F0;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #matrixCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 50px auto;
+            background-color: rgba(0, 0, 0, 0.75);
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #0056b3;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #00ff00;
+            text-decoration: none;
+            padding: 8px 15px;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .back-link:hover {
+            background-color: #00ff00;
+            color: #000;
+            text-shadow: none;
+        }
+        h1 {
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 10px;
+            color: #00ff00;
+            text-shadow: 0 0 5px #00ff00;
+        }
+        h2 {
+            color: #00cc00;
+            margin-top: 25px;
+            border-bottom: 1px dashed #0056b3;
+            padding-bottom: 5px;
+        }
+        h3 {
+            color: #00ff88;
+            margin-top: 20px;
+        }
+        pre {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid #00aa00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+            margin-bottom: 20px;
+        }
+        /* 範例輸出的樣式 */
+        pre.output {
+            color: #f1f1f1; /* 輸出用白色，更易讀 */
+            background-color: rgba(10, 10, 10, 0.8);
+            border: 1px dashed #444;
+        }
+        code {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 0.95em;
+        }
+        p {
+            margin-bottom: 15px;
+        }
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        ul li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 20px;
+        }
+        ul li::before {
+            content: "•";
+            color: #00ff00;
+            position: absolute;
+            left: 0;
+            font-size: 1.2em;
+            line-height: 1.6;
+        }
+        /* 【重要】黃色使用注意 */
+        .caution-warning {
+            background-color: rgba(255, 255, 0, 0.1); /* 黃色警告 */
+            border: 1px solid #cccc00;
+            color: #ffff00; /* 亮黃色文字 */
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(255, 255, 0, 0.3);
+        }
+        .caution-warning strong {
+            color: #ff0; /* 強調黃色 */
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="matrixCanvas"></canvas>
+
+    <div class="container">
+        <a href="matrix_links.html" class="back-link">← 返回筆記主頁</a>
+
+        <h1>指令詳解: `cat` (查看/串接檔案)</h1>
+
+        <div class="caution-warning">
+            <strong>【使用注意】</strong>
+            <p><code>cat</code> 是為「文字檔案」設計的。如果您不小心 <code>cat</code> 了一個「二進位檔」（例如一張圖片、一個程式或一個 .zip 壓縮檔），它不會損壞檔案，但會在您的終端機上印出大量無法閱讀的亂碼，甚至可能卡住您的終端機視窗。</p>
+            <p>在安全情境下，請務必遵守權限：**讀取您沒有權限的檔案（例如他人的私鑰或系統密碼檔）是未經授權的存取行為。**</p>
+        </div>
+
+        <p><code>cat</code> (來自 "concatenate"，意為「串接」) 是 Linux 中最常用的指令之一。它最廣為人知的用途是**將一個或多個檔案的內容印到螢幕上**。</p>
+
+        <h2>1. 基本用法：查看單一檔案</h2>
+        <p>這是 <code>cat</code> 最常見的用法。在您用 <code>ls</code> 看到一個 `README.md` 檔案後，您可以使用 <code>cat</code> 來閱讀它。</p>
+        <pre><code>cat README.md</code></pre>
+        <p>輸出：</p>
+        <pre class="output"># 歡迎使用我的專案
+
+這是一個範例 README 檔案。
+`cat` 指令會將這些文字完整地顯示在您的終端機上。
+</pre>
+
+        <h2>2. <code>cat</code> 的原意：串接檔案</h2>
+        <p><code>cat</code> 的真正強大之處在於它可以將多個檔案「串接」在一起。搭配 <code>></code> (重導向) 符號，您可以將多個檔案合併成一個新檔案。</p>
+        <pre><code># 將 part1.txt 和 part2.txt 的內容合併，並存成 new_file.txt
+cat part1.txt part2.txt > new_file.txt</code></pre>
+        <ul>
+            <li><code>part1.txt</code>: "這是第一行。"</li>
+            <li><code>part2.txt</code>: "這是第二行。"</li>
+            <li>執行後，<code>new_file.txt</code> 的內容將會是 "這是第一行。這是第二行。"</li>
+            <li><code>></code>: 這個符號會**覆蓋** (Overwrite) <code>new_file.txt</code> 的內容。如果您想「附加」(Append) 到檔案末尾，請使用 <code>>></code>。</li>
+        </ul>
+
+        <h2>3. 快速建立檔案</h2>
+        <p>您可以使用 <code>cat</code> 搭配 <code>></code> 來快速建立一個小檔案，而不需要打開完整的文字編輯器（如 `nano` 或 `vim`）。</p>
+        <pre><code>cat > my_note.txt</code></pre>
+        <p>執行此指令後，終端機看起來會像在「等待」。您現在可以開始打字：</p>
+        <pre class="output">這是我要記下的第一行筆記。
+這是第二行。
+(接著按下 Ctrl+D 組合鍵)
+</pre>
+        <ul>
+            <li>當您輸入完畢後，按下 <code>Ctrl+D</code> (代表 End-of-File)，<code>cat</code> 就會停止接收輸入，並將您剛才輸入的內容儲存到 `my_note.txt` 中。</li>
+        </ul>
+
+        <h2>4. 搭配管線 (Pipe) 使用</h2>
+        <p><code>cat</code> 經常作為「管線」(<code>|</code>) 的開頭，將檔案內容傳送給其他指令進行處理。</p>
+        <pre><code># 在 access.log 檔案中，搜尋 (grep) 所有包含 "ERROR" 的行
+cat access.log | grep "ERROR"</code></pre>
+        <ul>
+            <li><code>cat access.log</code>: 讀取整個日誌檔案。</li>
+            <li><code>|</code>: 將左邊指令的「輸出」變成右邊指令的「輸入」。</li>
+            <li><code>grep "ERROR"</code>: 在收到的輸入中，只篩選出包含 "ERROR" 的行。</li>
+        </ul>
+
+    </div>
+
+    <script>
+        /* [這裡的 JavaScript 腳本與之前相同] */
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const binary = '01';
+        const fontSize = 16;
+        const columns = Math.floor(canvas.width / fontSize);
+        const drops = [];
+        for (let x = 0; x < columns; x++) {
+            drops[x] = 1;
+        }
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#0F0';
+            ctx.font = `${fontSize}px "Courier New"`;
+            for (let i = 0; i < drops.length; i++) {
+                const text = binary.charAt(Math.floor(Math.random() * binary.length));
+                const x = i * fontSize;
+                const y = drops[i] * fontSize;
+                ctx.fillText(text, x, y);
+                if (y > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        setInterval(draw, 33);
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+
+</body>
+</html>
