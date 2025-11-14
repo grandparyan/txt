@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的技術筆記</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1 {
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #0056b3; /* 藍色標題 */
+        }
+        pre {
+            background-color: #2d2d2d; /* 深色背景 */
+            color: #f1f1f1;           /* 淺色文字 */
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;         /* 水平滾動 */
+            border: 1px solid #444;
+        }
+        code {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 0.95em;
+        }
+        .warning {
+            background-color: #fff3cd; /* 黃色警告框 */
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>我的技術筆記</h1>
+
+    <div class="warning">
+        <strong>安全提醒：</strong> 網路工具（如 Nmap、Tcpdump）應用於經授權的網路管理和安全測試。未經許可的掃描或攔截行為是違法且不道德的。
+    </div>
+
+    <h2>1. 確認自己的 IP 位置</h2>
+    <pre><code>ip addr</code></pre>
+
+    <h2>2. 掃描子網域</h2>
+    <pre><code>nmap {您的網路範圍}</code></pre>
+
+    <h2>3. 安全登入主機</h2>
+    <pre><code>ssh {使用者名稱}@{主機IP}</code></pre>
+
+    <h2>4. 讀取檔案</h2>
+    <pre><code>cat {檔案名稱}</code></pre>
+
+    <h2>5. (其他筆記...)</h2>
+    <pre><code>{...請在此處填入您自己的指令...}</code></pre>
+
+</body>
+</html>
