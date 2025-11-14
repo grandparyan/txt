@@ -3,33 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>滲透指令工具書</title>
+    <title>我的帥氣技術筆記 (Matrix 效果)</title>
     <style>
+        /* 1. 全局和背景設定 */
         body {
-            font-family: "Courier New", Courier, monospace; /* 更具駭客感的字體 */
+            font-family: "Courier New", Courier, monospace;
             line-height: 1.6;
-            padding: 20px;
             background-color: #000; /* 全黑背景 */
-            color: #0F0; /* 綠色文字 */
-            
-            /* 背景圖片設定 */
-            background-image: url('hacker_bg.png'); /* 替換為你的圖片路徑 */
-            background-size: cover; /* 覆蓋整個區域 */
-            background-attachment: fixed; /* 背景固定不動 */
-            background-position: center center; /* 圖片置中 */
-            background-repeat: no-repeat; /* 不重複 */
+            color: #0F0; /* 預設綠色文字 */
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* 隱藏滾動條 */
         }
-        
+
+        /* 2. Canvas 畫布 (Matrix 雨) */
+        #matrixCanvas {
+            position: fixed; /* 固定在整個視窗 */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1; /* 放在最底層 */
+        }
+
+        /* 3. 內容容器 (您的筆記) */
         .container {
+            position: relative; /* 確保它在 canvas 之上 */
+            z-index: 2; /* 層級高於 canvas */
+            
             max-width: 800px;
-            margin: 0 auto;
-            background-color: rgba(0, 0, 0, 0.7); /* 半透明黑色背景，讓文字清晰可見 */
+            margin: 50px auto; /* 距離頂部 50px，左右自動 */
+            background-color: rgba(0, 0, 0, 0.75); /* 半透明黑色背景 */
             padding: 30px;
             border-radius: 10px;
             border: 1px solid #0056b3; /* 藍色邊框 */
             box-shadow: 0 0 20px rgba(0, 255, 0, 0.5); /* 綠色發光效果 */
+            
+            /* 讓內容可以滾動，如果筆記太長 */
+            max-height: 80vh; /* 最大高度為視窗的 80% */
+            overflow-y: auto; /* 內容超出時顯示垂直滾動條 */
         }
 
+        /* 4. 內容樣式 */
         h1 {
             border-bottom: 2px solid #0056b3;
             padding-bottom: 10px;
@@ -41,22 +56,22 @@
             margin-top: 25px;
         }
         pre {
-            background-color: rgba(0, 0, 0, 0.8); /* 深色半透明背景，文字更易讀 */
-            color: #00ff00;           /* 亮綠色文字 */
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #00ff00;
             padding: 15px;
             border-radius: 8px;
-            overflow-x: auto;         /* 水平滾動 */
-            border: 1px solid #00aa00; /* 綠色邊框 */
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3); /* 綠色發光 */
+            overflow-x: auto;
+            border: 1px solid #00aa00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
         }
         code {
             font-family: "Courier New", Courier, monospace;
             font-size: 0.95em;
         }
         .warning {
-            background-color: rgba(255, 255, 0, 0.1); /* 淺黃色半透明警告框 */
+            background-color: rgba(255, 255, 0, 0.1);
             border: 1px solid #cccc00;
-            color: #ffff00; /* 亮黃色文字 */
+            color: #ffff00;
             padding: 15px;
             border-radius: 8px;
             margin-top: 20px;
@@ -66,40 +81,104 @@
 </head>
 <body>
 
+    <canvas id="matrixCanvas"></canvas>
+
     <div class="container">
-        <h1>滲透指令工具書</h1>
+        <h1>我的帥氣技術筆記</h1>
+
+        <div class="warning">
+            <strong>安全提醒：</strong> 網路工具（如 Nmap、Tcpdump）應用於經授權的網路管理和安全測試。未經許可的掃描或攔截行為是違法且不道德的。
+        </div>
 
         <h2>1. 確認自己的 IP 位置</h2>
         <pre><code>ip addr</code></pre>
 
-        <h2>2. 找出 DMZ 內所有開啟的 Services (Port)</h2>
-        <pre><code>nmap {你的IP位置}</code></pre>
+        <h2>2. 掃描子網域</h2>
+        <pre><code>nmap {您的網路範圍}</code></pre>
 
-        <h2>3. 嘗試連接內部電腦</h2>
+        <h2>3. 安全登入主機</h2>
         <pre><code>ssh {使用者名稱}@{主機IP}</code></pre>
 
-        <h2>4. 攔截帶有帳號密碼的封包</h2>
-        <pre><code>tcpdump</code></pre>
+        <h2>4. 讀取檔案</h2>
+        <pre><code>cat {檔案名稱}</code></pre>
 
-        <h2>5. 解碼封包</h2>
-        <pre><code>base64 -d {    }</code></pre>
-
-        <h2>6. 登入內部主機</h2>
-        <pre><code>ssh {    }@{    }</code></pre>
-
-        <h2>7. 利用linux指令操作內部主機</h2>
-        <pre><code>ls</code></pre>
-
-        <h2>8. 讀取重要資料</h2>
-        <pre><code>cat {    }</code></pre>
-
-        <h2>9. 斷開內部電腦</h2>
-        <pre><code>logout</code></pre>
-
-        <h2>10. 送出資料</h2>
-        <pre><code>mailto ~[1130730@fheh.isip.org](mailto:1130730@fheh.isip.org)~ {    }</code></pre>
+        <h2>5. (其他筆記...)</h2>
+        <pre><code>{...請在此處填入您自己的指令...}</code></pre>
         
+        <h2>6. (更多筆記...)</h2>
+        <pre><code>{...請在此處填入您自己的指令...}</code></pre>
+        
+        <h2>7. (更多筆記...)</h2>
+        <pre><code>{...請在此處填入您自己的指令...}</code></pre>
     </div>
+
+    <script>
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // 設定畫布寬高為視窗大小
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // 包含 0 和 1 的字元集
+        const binary = '01';
+        const fontSize = 16;
+        
+        // 根據畫布寬度和字體大小，計算有多少列
+        const columns = Math.floor(canvas.width / fontSize);
+
+        // 儲存每一列的 y 座標 (代表雨滴的頭部)
+        // 每個元素都是一個 y 座標
+        const drops = [];
+        for (let x = 0; x < columns; x++) {
+            drops[x] = 1; // 初始都在頂部
+        }
+
+        function draw() {
+            // 1. 畫一個半透明的黑色矩形來遮蓋舊的畫面
+            // 這會產生漸隱的拖尾效果
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 2. 設定文字顏色和字體
+            ctx.fillStyle = '#0F0'; // 綠色
+            ctx.font = `${fontSize}px "Courier New"`;
+
+            // 3. 遍歷每一列 (每一個雨滴)
+            for (let i = 0; i < drops.length; i++) {
+                // 從字元集中隨機選一個 0 或 1
+                const text = binary.charAt(Math.floor(Math.random() * binary.length));
+                
+                // 計算文字的 x, y 座標
+                const x = i * fontSize;
+                const y = drops[i] * fontSize;
+                
+                // 在畫布上畫出文字
+                ctx.fillText(text, x, y);
+
+                // 檢查雨滴是否快到底部
+                if (y > canvas.height && Math.random() > 0.975) {
+                    // 隨機重置回頂部，產生新的雨滴
+                    drops[i] = 0;
+                }
+
+                // 讓雨滴往下掉一格
+                drops[i]++;
+            }
+        }
+
+        // 每 33 毫秒執行一次 draw 函數，產生動畫
+        setInterval(draw, 33);
+
+        // 當視窗大小改變時，重新調整畫布大小
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            // 重新計算列數並重置雨滴 (簡化處理，直接清空)
+            // 實際應用中可以做更複雜的調整
+            location.reload(); 
+        });
+    </script>
 
 </body>
 </html>
